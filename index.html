@@ -1369,7 +1369,7 @@
 ├── scripts/
 │   ├── build_managed.py            # dotnet publish the managed csproj
 │   ├── build_aot.py                # dotnet publish -r &lt;RID&gt; --publish-aot
-│   ├── build_both.sh               # produce a nupkg with BOTH layouts
+│   ├── build_both.py               # produce a nupkg with BOTH layouts
 │   ├── publish.py                  # push the nupkg to the Gitea NuGet feed
 │   └── smoke_test_aot.py           # verify the AOT nupkg is well-formed
 └── @common/                        # shared with the @common scripts in the repo root
@@ -1389,7 +1389,7 @@ python3<span class="w"> </span>scripts/build_aot.py
 python3<span class="w"> </span>scripts/publish.py
 
 <span class="c1"># 3. both — single nupkg supporting either engine</span>
-python3<span class="w"> </span>scripts/build_both.sh
+python3<span class="w"> </span>scripts/build_both.py
 python3<span class="w"> </span>scripts/publish.py
 </code></pre></div>
 <p>Then load and run:</p>

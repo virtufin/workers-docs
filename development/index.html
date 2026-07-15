@@ -1338,7 +1338,7 @@
 <h1 id="development">Development</h1>
 <p>Working on <code>virtufin-workers</code> itself. Covers the build pipeline, the test layout, the CI surface, and the contribution conventions.</p>
 <h2 id="build-pipeline">Build pipeline</h2>
-<p>The repo has two build entry points: per-worker (the WebSocketManagerController's <code>scripts/build_*.py</code> and <code>scripts/build_both.sh</code>) and shared (<code>@common/scripts/build_*.py</code>).</p>
+<p>The repo has two build entry points: per-worker (the WebSocketManagerController's <code>scripts/build_*.py</code> and <code>scripts/build_both.py</code>) and shared (<code>@common/scripts/build_*.py</code>).</p>
 <p>The shared scripts:
 - <code>build_managed.py</code> — produces a managed-only nupkg.
 - <code>build_aot.py</code> — produces an AOT-only nupkg (requires Docker).
@@ -1352,7 +1352,7 @@ python3<span class="w"> </span>WebSocketManagerController/scripts/build_managed.
 python3<span class="w"> </span>WebSocketManagerController/scripts/build_aot.py
 
 <span class="c1"># Both (single nupkg with both layouts)</span>
-bash<span class="w"> </span>WebSocketManagerController/scripts/build_both.sh
+bash<span class="w"> </span>WebSocketManagerController/scripts/build_both.py
 </code></pre></div></p>
 <p>The <code>smoke_test_aot.py</code> script verifies the AOT path end-to-end:
 <div class="highlight"><pre><span></span><code>python3<span class="w"> </span>WebSocketManagerController/scripts/smoke_test_aot.py
@@ -1374,7 +1374,7 @@ bash<span class="w"> </span>WebSocketManagerController/scripts/build_both.sh
 </ul>
 <h2 id="see-also">See also</h2>
 <ul>
-<li><strong><a href="../build-script/">Build Script</a></strong> — <code>build_managed.py</code> + <code>build_aot.py</code> + <code>build_both.sh</code> reference</li>
+<li><strong><a href="../build-script/">Build Script</a></strong> — <code>build_managed.py</code> + <code>build_aot.py</code> + <code>build_both.py</code> reference</li>
 <li><strong><a href="../troubleshooting/">Troubleshooting</a></strong> — common build/load failures and how to diagnose them</li>
 <li><strong><a href="../ecosystem/">Ecosystem</a></strong> — the wider platform and which docs site covers what</li>
 </ul>

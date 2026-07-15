@@ -1428,7 +1428,7 @@
 </ul>
 <p>The nupkg can be registered with <code>application/x-native-dll</code> only.</p>
 <h2 id="mode-3-both-single-nupkg-both-layouts">Mode 3: both (single nupkg, both layouts)</h2>
-<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/build_both.sh
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/build_both.py
 </code></pre></div>
 <p>Output: a single <code>&lt;PackageId&gt;.nupkg</code> containing <strong>both</strong> <code>lib/&lt;tfm&gt;/*.dll</code> AND <code>runtimes/&lt;rid&gt;/native/lib*.so</code>. The script runs the managed build and the AOT build, then stages both into a single staging dir, writes a combined <code>.nuspec</code>, and produces a single nupkg with one content-addressed version.</p>
 <p>Use this when:</p>
@@ -1443,9 +1443,9 @@
 <ul>
 <li><code>build_managed.py</code> → <code>@common/scripts/build_managed.py --csproj &lt;path&gt;</code></li>
 <li><code>build_aot.py</code> → <code>@common/scripts/build_aot.py --managed-csproj &lt;path&gt; --native-csproj &lt;path&gt;</code></li>
-<li><code>build_both.sh</code> → subprocesses both, then combines</li>
+<li><code>build_both.py</code> → subprocesses both, then combines</li>
 </ul>
-<p>The shared <code>@common/scripts/build_managed.py</code> exports helpers (<code>repack_nupkg</code>, <code>rewrite_nuspec_version</code>, <code>sha256_file</code>, <code>read_package_id_from_csproj</code>, <code>read_library_version</code>) that the AOT script and the both-orchestrator import. The two-package model: <code>@common/scripts/build_managed.py</code> is the managed build; <code>@common/scripts/build_aot.py</code> is the AOT build; the worker-local <code>build_both.sh</code> is the orchestrator.</p>
+<p>The shared <code>@common/scripts/build_managed.py</code> exports helpers (<code>repack_nupkg</code>, <code>rewrite_nuspec_version</code>, <code>sha256_file</code>, <code>read_package_id_from_csproj</code>, <code>read_library_version</code>) that the AOT script and the both-orchestrator import. The two-package model: <code>@common/scripts/build_managed.py</code> is the managed build; <code>@common/scripts/build_aot.py</code> is the AOT build; the worker-local <code>build_both.py</code> is the orchestrator.</p>
 <h2 id="what-the-nupkg-contains">What the nupkg contains</h2>
 <p>Mode 1 (<code>managed</code>):
 <div class="highlight"><pre><span></span><code>&lt;PackageId&gt;.nupkg/
@@ -1493,7 +1493,7 @@
 <p>Every nupkg produced by any of the three scripts is named <code>&lt;PackageId&gt;.&lt;LIBRARY_VERSION&gt;-sha.&lt;8hex&gt;.nupkg</code>, where <code>&lt;8hex&gt;</code> is the first 8 chars of the nupkg's SHA-256. Re-publishes of unchanged source are no-ops (the SHA is stable because the build script uses deterministic mtimes — 1980-01-01 00:00 — and sorted zip entries). The <code>build_version.txt</code> at the nupkg root is the canonical version string that <code>binance.py</code> (and other consumers) read to construct the download URL.</p>
 <h2 id="see-also">See also</h2>
 <ul>
-<li><strong><a href="../build-script/">Build Script</a></strong> — the build_aot.py + build_managed.py + build_both.sh reference</li>
+<li><strong><a href="../build-script/">Build Script</a></strong> — the build_aot.py + build_managed.py + build_both.py reference</li>
 <li><strong><a href="../runtime-arch-check/">Runtime Arch Check</a></strong> — how the <code>.supported-rids</code> sidecar is consumed</li>
 <li><strong><a href="../engines/">Engines</a></strong> — the DotNetDll vs NativeDll contrast in detail</li>
 </ul>

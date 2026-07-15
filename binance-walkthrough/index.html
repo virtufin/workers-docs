@@ -1506,6 +1506,11 @@
 </tbody>
 </table>
 <p>The script uses <code>create</code>, <code>subscribe</code>, <code>publish</code> for setup and <code>disconnect</code> would be the inverse. The other commands are useful for runtime introspection and control.</p>
+<p>A few fields in the protocol table deserve explanation:</p>
+<ul>
+<li><strong><code>api_host</code></strong>: the API Gateway host:port the <strong>managed shim</strong> uses to configure its <code>ApiClient</code>. The managed <code>ApiCommandWorker&lt;T&gt;.EnsureClientFromCommand</code> reads this field on every handler invocation. The AOT shim doesn't need it — <code>AotGatewayAdapter</code> pulls the gateway from <code>AotNative&lt;T&gt;.CurrentContext</code>, which the engine sets per invocation.</li>
+<li><strong><code>send_raw</code></strong>: sends arbitrary bytes through the WebSocket connection identified by <code>id</code>. Binance's stream subscription protocol is JSON-RPC over WebSocket — the worker constructs <code>{"method":"SUBSCRIBE","params":["btcusdt@depth@100ms",...],"id":1}</code> and sends it via <code>send_raw</code> with content-type <code>application/json</code>. The <code>message</code> parameter is base64-encoded in the CloudEvent data payload and decoded by the worker before forwarding to the upstream.</li>
+</ul>
 <h2 id="see-also">See also</h2>
 <ul>
 <li><strong><a href="../getting-started/">Getting Started</a></strong> — how to run the script end-to-end</li>

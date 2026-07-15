@@ -1361,7 +1361,7 @@
 
 
 <h1 id="runtime-architecture-check">Runtime Architecture Check</h1>
-<p>Every nupkg produced by <code>build_aot.py</code> (or by <code>build_both.sh</code>) carries a <code>.supported-rids</code> sidecar manifest at the nupkg root. Consumers (e.g. <code>binance.py</code>) read it before calling <code>CreateWorker</code> to assert the local RID is supported — failing fast with a clear error rather than letting the WM's <code>NativeDllEngine</code> fail at load time with a cryptic "library not found" message.</p>
+<p>Every nupkg produced by <code>build_aot.py</code> (or by <code>build_both.py</code>) carries a <code>.supported-rids</code> sidecar manifest at the nupkg root. Consumers (e.g. <code>binance.py</code>) read it before calling <code>CreateWorker</code> to assert the local RID is supported — failing fast with a clear error rather than letting the WM's <code>NativeDllEngine</code> fail at load time with a cryptic "library not found" message.</p>
 <h2 id="the-sidecar-format">The sidecar format</h2>
 <p>A plain text file at the nupkg root, one RID per line, in build order:</p>
 <div class="highlight"><pre><span></span><code>linux-arm64

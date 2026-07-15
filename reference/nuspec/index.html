@@ -1437,7 +1437,7 @@
 </tbody>
 </table>
 <h2 id="the-contract">The contract</h2>
-<p>The nupkg must have <strong>exactly one</strong> <code>virtufinLibrary</code> value. The <code>PackageWorker</code> and <code>PackageWorkerNative</code> MSBuild targets both emit the same <code>virtufinLibrary</code> value, so a <code>--format both</code> nupkg has a single <code>virtufinLibrary</code> that resolves to either the managed DLL or the AOT .so depending on which engine loads the nupkg.</p>
+<p>The nupkg must have <strong>exactly one</strong> <code>virtufinLibrary</code> value. The <code>PackageWorker</code> and <code>PackageWorkerNative</code> MSBuild targets both emit the same <code>virtufinLibrary</code> value, so a nupkg built by <code>build_both.py</code> has a single <code>virtufinLibrary</code> that resolves to either the managed DLL or the AOT .so depending on which engine loads the nupkg.</p>
 <p>The other <code>virtufin*</code> fields are advisory for the AOT path only (the managed engine doesn't read them — it uses reflection on <code>IWorker</code> to discover the worker class). For a managed-only nupkg, the <code>virtufinEntryPoint</code> / <code>virtufinFreeResult</code> / <code>virtufinLibrary</code> fields are still required by the schema but are not read at load time.</p>
 <h2 id="defaults">Defaults</h2>
 <p>The build scripts default the <code>virtufin*</code> fields to:

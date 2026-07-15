@@ -1450,7 +1450,9 @@
 <li>The trust model accepts that the worker is fully trusted (the <code>.so</code> runs in-process with no sandbox).</li>
 <li>The AOT compile time and reproducibility is acceptable (the cross-build image is required; the first compile takes 5-10 min via emulation on arm64 hosts).</li>
 </ul>
-<p><strong>Use <code>--format both</code></strong> when you want both options available: a single nupkg with <code>lib/net10.0/*.dll</code> AND <code>runtimes/&lt;rid&gt;/native/lib*.so</code>. Register two workers against the same nupkg URL with different MIME types. The WM picks the engine per worker instance. Useful for staged rollouts (deploy AOT alongside managed, then drain managed workers once AOT is verified).</p>
+<p><strong>Use <code>build_both.py</code></strong> when you want a single nupkg supporting either engine: it produces one nupkg with <code>lib/net10.0/*.dll</code> AND <code>runtimes/&lt;rid&gt;/native/lib*.so</code>.</p>
+<p>For <strong>A/B testing</strong>: register managed and AOT workers on <strong>different topics</strong> (e.g. <code>command.myworker.managed</code> vs <code>command.myworker.aot</code>). Competing consumers mean two workers on the same topic compete — messages go to exactly one instance, so same-topic A/B testing silently drops messages on one side.</p>
+<p>For <strong>sequential rollout</strong>: create the AOT worker on the production topic, verify it handles messages, then delete the managed worker. Only one worker should be active on a given topic at a time.</p>
 <h2 id="see-also">See also</h2>
 <ul>
 <li><strong><a href="../worker-author-guide/">Worker Author Guide</a></strong> — the three-file worker pattern in detail</li>

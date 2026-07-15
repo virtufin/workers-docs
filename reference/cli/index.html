@@ -1083,10 +1083,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#scriptsbuild_bothsh" class="md-nav__link">
+  <a href="#scriptsbuild_bothpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        scripts/build_both.sh
+        scripts/build_both.py
       
     </span>
   </a>
@@ -1311,10 +1311,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#scriptsbuild_bothsh" class="md-nav__link">
+  <a href="#scriptsbuild_bothpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        scripts/build_both.sh
+        scripts/build_both.py
       
     </span>
   </a>
@@ -1411,7 +1411,7 @@
 - <code>NATIVE_CSPROJ</code> → <code>WebSocketManagerController/src/Virtufin.Worker.WebSocketManagerController.Native/Virtufin.Worker.WebSocketManagerController.Native.csproj</code>.
 - <code>NUPKG_DIR</code> → <code>../build/Virtufin.Worker.WebSocketManagerController.Native.nupkg</code>.
 - <code>DEFAULT_OUT = os.environ.get("OUT", str(NUPKG_DIR))</code> — the <code>OUT</code> env var overrides the canonical dir.</p>
-<h2 id="scriptsbuild_bothsh"><code>scripts/build_both.sh</code></h2>
+<h2 id="scriptsbuild_bothpy"><code>scripts/build_both.py</code></h2>
 <p>Thin shell orchestrator that calls <code>build_managed.py</code> and <code>build_aot.py</code> and combines. Flags:</p>
 <ul>
 <li><code>--rids RID1,RID2</code> — comma-separated (default <code>linux-arm64,linux-x64</code>).</li>

@@ -860,10 +860,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#build_bothsh" class="md-nav__link">
+  <a href="#build_bothpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        build_both.sh
+        build_both.py
       
     </span>
   </a>
@@ -1311,10 +1311,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#build_bothsh" class="md-nav__link">
+  <a href="#build_bothpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        build_both.sh
+        build_both.py
       
     </span>
   </a>
@@ -1383,13 +1383,13 @@
 <td><code>runtimes/&lt;rid&gt;/native/lib*.so</code> nupkg</td>
 </tr>
 <tr>
-<td><code>WebSocketManagerController/scripts/build_both.sh</code></td>
+<td><code>WebSocketManagerController/scripts/build_both.py</code></td>
 <td>both</td>
 <td>single nupkg with both layouts</td>
 </tr>
 </tbody>
 </table>
-<p>The shared helpers (<code>repack_nupkg</code>, <code>rewrite_nuspec_version</code>, <code>sha256_file</code>, <code>read_package_id_from_csproj</code>, <code>read_library_version</code>) live in <code>@common/scripts/build_managed.py</code> and are imported by the AOT and both-orchestrator scripts. The two-package model: <code>@common/scripts/build_managed.py</code> is the managed build (with shared helpers); <code>@common/scripts/build_aot.py</code> is the AOT build (imports the helpers); the worker-local <code>build_both.sh</code> is a thin shell orchestrator.</p>
+<p>The shared helpers (<code>repack_nupkg</code>, <code>rewrite_nuspec_version</code>, <code>sha256_file</code>, <code>read_package_id_from_csproj</code>, <code>read_library_version</code>) live in <code>@common/scripts/build_managed.py</code> and are imported by the AOT and both-orchestrator scripts. The two-package model: <code>@common/scripts/build_managed.py</code> is the managed build (with shared helpers); <code>@common/scripts/build_aot.py</code> is the AOT build (imports the helpers); the worker-local <code>build_both.py</code> is a thin shell orchestrator.</p>
 <h2 id="build_managedpy">build_managed.py</h2>
 <div class="highlight"><pre><span></span><code>python3<span class="w"> </span>scripts/build_managed.py<span class="w"> </span><span class="o">[</span>--csproj<span class="w"> </span>PATH<span class="o">]</span><span class="w"> </span><span class="o">[</span>--out<span class="w"> </span>DIR<span class="o">]</span><span class="w"> </span><span class="o">[</span>--config<span class="w"> </span>PATH<span class="o">]</span><span class="w"> </span><span class="o">[</span>--library-version<span class="w"> </span>V<span class="o">]</span>
 </code></pre></div>
@@ -1427,8 +1427,8 @@
 5. Emit a stub <code>.nuspec</code> (the AOT path doesn't produce one from an MSBuild target — we synthesize it).
 6. Re-pack + SHA-256 + content-addressed version, same as the managed build.</p>
 <p>The Docker invocation mounts the worker's <code>src/</code> directory at <code>/src</code> and the per-RID publish output at <code>/&lt;out&gt;</code>. The AOT csproj's <code>&lt;Compile Include="..\&lt;managed&gt;\Logic.cs"/&gt;</code> resolves correctly inside the container.</p>
-<h2 id="build_bothsh">build_both.sh</h2>
-<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/build_both.sh<span class="w"> </span><span class="o">[</span>--rids<span class="w"> </span>RID1,RID2<span class="o">]</span><span class="w"> </span><span class="o">[</span>--out<span class="w"> </span>DIR<span class="o">]</span><span class="w"> </span><span class="o">[</span>--no-clean<span class="o">]</span><span class="w"> </span><span class="o">[</span>--skip-managed<span class="o">]</span><span class="w"> </span><span class="o">[</span>--skip-aot<span class="o">]</span>
+<h2 id="build_bothpy">build_both.py</h2>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/build_both.py<span class="w"> </span><span class="o">[</span>--rids<span class="w"> </span>RID1,RID2<span class="o">]</span><span class="w"> </span><span class="o">[</span>--out<span class="w"> </span>DIR<span class="o">]</span><span class="w"> </span><span class="o">[</span>--no-clean<span class="o">]</span><span class="w"> </span><span class="o">[</span>--skip-managed<span class="o">]</span><span class="w"> </span><span class="o">[</span>--skip-aot<span class="o">]</span>
 </code></pre></div>
 <ul>
 <li><code>--rids</code> — comma-separated RIDs (default: <code>linux-arm64,linux-x64</code>).</li>

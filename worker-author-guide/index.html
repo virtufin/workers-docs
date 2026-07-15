@@ -1495,10 +1495,13 @@
 
 <span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">EchoWorkerLogic</span>
 <span class="p">{</span>
-<span class="w">    </span><span class="c1">// Worker-wide state. For a single-instance worker (the WM&#39;s engine</span>
-<span class="w">    </span><span class="c1">// model), this is safe: only one CloudEvent is in flight at a</span>
-<span class="w">    </span><span class="c1">// time per worker.</span>
-<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">volatile</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_echoing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Worker-wide state. The WM guarantees single-threaded dispatch</span>
+<span class="w">    </span><span class="c1">// per worker instance — only one CloudEvent is in flight at a time —</span>
+<span class="w">    </span><span class="c1">// and creates one engine per CreateWorker call, so each worker</span>
+<span class="w">    </span><span class="c1">// instance has its own independent copy of this field. &#39;volatile&#39;</span>
+<span class="w">    </span><span class="c1">// is kept for documentation clarity (cannot rely on the guarantee</span>
+<span class="w">    </span><span class="c1">// across engine reloads).</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="n">volatile</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_echoing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">JsonObject</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">HandleCommandAsync</span><span class="p">(</span>
 <span class="w">        </span><span class="n">CloudEvent</span><span class="w"> </span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">Command</span><span class="w"> </span><span class="n">command</span><span class="p">,</span><span class="w"> </span><span class="n">JsonNode</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">IGatewayClient</span><span class="w"> </span><span class="n">gateway</span><span class="p">)</span>
@@ -1608,6 +1611,13 @@
 <span class="w">        </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">AotNative</span><span class="o">&lt;</span><span class="n">EchoWorkerNative</span><span class="o">&gt;</span><span class="p">.</span><span class="n">FreeResultStatic</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
+<p><code>AotNative&lt;T&gt;.CurrentContext</code> is set by the engine's <code>Process</code> call
+before the managed handler runs. It is thread-local to the calling
+thread (the engine calls <code>Process</code> synchronously on the caller's
+thread). Multiple concurrent <code>Process</code> invocations each get their own
+thread-local <code>CurrentContext</code> — the engine is reentrant per the
+WM's concurrency model. The <code>Gateway</code> property reads <code>CurrentContext</code>
+on every invocation, so there is no stale reference across calls.</p>
 <h2 id="step-5-the-two-csproj-files">Step 5: the two csproj files</h2>
 <h3 id="managed-csproj-virtufinworkerechoworkercsproj">Managed csproj (<code>Virtufin.Worker.EchoWorker.csproj</code>)</h3>
 <p>Inherits the same shape as the WebSocketManagerController managed csproj: <code>&lt;PackageId&gt;Virtufin.Worker.EchoWorker&lt;/PackageId&gt;</code>, <code>&lt;PackageReference Include="Virtufin.Worker.DevKit" /&gt;</code>, <code>&lt;Compile Include="EchoWorkerLogic.cs" Link="Logic.cs"/&gt;</code>, <code>PackageWorker</code> MSBuild target.</p>
@@ -1630,7 +1640,7 @@ python3<span class="w"> </span>scripts/smoke_test_aot.py
 <ul>
 <li><strong><a href="../engines/">Engines</a></strong> — DotNetDll vs NativeDll, and the IGatewayClient adapter pattern in detail</li>
 <li><strong><a href="../packaging/">Packaging Modes</a></strong> — the three packaging modes and which to pick</li>
-<li><strong><a href="../build-script/">Build Script</a></strong> — the build_aot.py + build_managed.py + build_both.sh reference</li>
+<li><strong><a href="../build-script/">Build Script</a></strong> — the build_aot.py + build_managed.py + build_both.py reference</li>
 </ul>
 
 
