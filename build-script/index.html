@@ -1,0 +1,1589 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for Virtufin worker source packages (e.g. WebSocketManagerController). Covers build pipeline, the managed/AOT packaging modes, the IGatewayClient abstraction, and the bridge between the WM core and per-worker shims.">
+      
+      
+      
+        <link rel="canonical" href="https://workers.docs.virtufin.com/build-script/">
+      
+      
+        <link rel="prev" href="../engines/">
+      
+      
+        <link rel="next" href="../packaging/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Build Script - Virtufin Workers Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#build-script" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Virtufin Workers Documentation" class="md-header__button md-logo" aria-label="Virtufin Workers Documentation" data-md-component="logo">
+      
+  <img src="../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Virtufin Workers Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Build Script
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <div class="md-source-wrapper">
+  <a href="https://git.haenerconsulting.com/virtufin/virtufin-workers" title="Go to repository" class="md-source-repo-link">
+    <div class="md-source__icon md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    </div>
+    <span class="md-source__repository">virtufin/virtufin-workers</span>
+  </a>
+    <a href="https://git.haenerconsulting.com/virtufin/virtufin-workers/commit/df32da8f82a300c3f40e6ca663ad07784c282d5e"
+       class="md-source-commit-badge"
+       target="_blank"
+       rel="noopener"
+       title="View commit df32da8">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 82 22" width="82" height="22" style="vertical-align:middle;">
+        <rect width="82" height="22" rx="4" fill="#e9ecef" stroke="currentColor" stroke-width="0.75" opacity="0.6"/>
+        <text x="41" y="15.5" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="11" font-weight="600" fill="currentColor">df32da8</text>
+      </svg>
+    </a>
+</div>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../introduction/" class="md-tabs__link">
+          
+  
+  
+  Introduction
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../worker-author-guide/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Build & Packaging
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../binance-walkthrough/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/cli/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ecosystem/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Ecosystem
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../development/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Development
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../troubleshooting/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Troubleshooting
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../cross-team-review-findings/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Cross-team Review
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Virtufin Workers Documentation" class="md-nav__button md-logo" aria-label="Virtufin Workers Documentation" data-md-component="logo">
+      
+  <img src="../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Virtufin Workers Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <div class="md-source-wrapper">
+  <a href="https://git.haenerconsulting.com/virtufin/virtufin-workers" title="Go to repository" class="md-source-repo-link">
+    <div class="md-source__icon md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    </div>
+    <span class="md-source__repository">virtufin/virtufin-workers</span>
+  </a>
+    <a href="https://git.haenerconsulting.com/virtufin/virtufin-workers/commit/df32da8f82a300c3f40e6ca663ad07784c282d5e"
+       class="md-source-commit-badge"
+       target="_blank"
+       rel="noopener"
+       title="View commit df32da8">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 82 22" width="82" height="22" style="vertical-align:middle;">
+        <rect width="82" height="22" rx="4" fill="#e9ecef" stroke="currentColor" stroke-width="0.75" opacity="0.6"/>
+        <text x="41" y="15.5" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="11" font-weight="600" fill="currentColor">df32da8</text>
+      </svg>
+    </a>
+</div>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Introduction
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../worker-author-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Worker Author Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../engines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build & Packaging
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Build & Packaging
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Script
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Script
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scripts-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scripts at a glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build_managedpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_managed.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build_aotpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_aot.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build_bothsh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_both.sh
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-shared-helpers-in-commonscriptsbuild_managedpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The shared helpers in @common/scripts/build_managed.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../packaging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Packaging Modes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runtime-arch-check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runtime Arch Check
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binance-walkthrough/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    binance.py Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/nuspec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nuspec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cross-team-review-findings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cross-team Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scripts-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scripts at a glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build_managedpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_managed.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build_aotpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_aot.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build_bothsh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_both.sh
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-shared-helpers-in-commonscriptsbuild_managedpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The shared helpers in @common/scripts/build_managed.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="build-script">Build Script</h1>
+<p>The three packaging modes (managed, native, both) are produced by three scripts that share a common layer of helpers in <code>@common/scripts/</code>. This page is the reference for those scripts.</p>
+<h2 id="scripts-at-a-glance">Scripts at a glance</h2>
+<table>
+<thead>
+<tr>
+<th>Script</th>
+<th>Mode</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WebSocketManagerController/scripts/build_managed.py</code></td>
+<td>managed</td>
+<td><code>lib/&lt;tfm&gt;/*.dll</code> nupkg</td>
+</tr>
+<tr>
+<td><code>WebSocketManagerController/scripts/build_aot.py</code></td>
+<td>native</td>
+<td><code>runtimes/&lt;rid&gt;/native/lib*.so</code> nupkg</td>
+</tr>
+<tr>
+<td><code>WebSocketManagerController/scripts/build_both.sh</code></td>
+<td>both</td>
+<td>single nupkg with both layouts</td>
+</tr>
+</tbody>
+</table>
+<p>The shared helpers (<code>repack_nupkg</code>, <code>rewrite_nuspec_version</code>, <code>sha256_file</code>, <code>read_package_id_from_csproj</code>, <code>read_library_version</code>) live in <code>@common/scripts/build_managed.py</code> and are imported by the AOT and both-orchestrator scripts. The two-package model: <code>@common/scripts/build_managed.py</code> is the managed build (with shared helpers); <code>@common/scripts/build_aot.py</code> is the AOT build (imports the helpers); the worker-local <code>build_both.sh</code> is a thin shell orchestrator.</p>
+<h2 id="build_managedpy">build_managed.py</h2>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>scripts/build_managed.py<span class="w"> </span><span class="o">[</span>--csproj<span class="w"> </span>PATH<span class="o">]</span><span class="w"> </span><span class="o">[</span>--out<span class="w"> </span>DIR<span class="o">]</span><span class="w"> </span><span class="o">[</span>--config<span class="w"> </span>PATH<span class="o">]</span><span class="w"> </span><span class="o">[</span>--library-version<span class="w"> </span>V<span class="o">]</span>
+</code></pre></div>
+<ul>
+<li><code>--csproj PATH</code> (required) — path to the worker .csproj.</li>
+<li><code>--out DIR</code> — output directory for <code>dotnet publish</code> (default: <code>/tmp/worker-out</code>).</li>
+<li><code>--config PATH</code> — path to <code>config.json</code> (default: <code>./config.json</code>); used to find <code>last_published.version</code> for the version-change report.</li>
+<li><code>--library-version V</code> — override the semver base from <code>&lt;worker_root&gt;/versions.env</code> (the script reads <code>LIBRARY_VERSION=</code> by default).</li>
+</ul>
+<p>Flow:
+1. <code>dotnet publish &lt;csproj&gt; -c Release -o &lt;out&gt;</code> — the csproj's <code>PackageWorker</code> target stages <code>lib/&lt;tfm&gt;/*.dll</code> + a <code>.nuspec</code> into <code>&lt;out&gt;/&lt;csproj-stem&gt;.nupkg.stage/</code>, then zips the nupkg deterministically (mtime=1980-01-01 00:00, sorted entries, <code>zip -X</code>).
+2. SHA-256 the nupkg, derive <code>&lt;LIBRARY_VERSION&gt;-sha.&lt;short&gt;</code>.
+3. Re-pack with the hash-derived version (extract → rewrite <code>&lt;version&gt;</code> in the nuspec → re-zip deterministically).
+4. Write <code>build_version.txt</code> next to the nupkg.
+5. Compare against <code>config.json</code>'s <code>last_published.version</code> and report whether a publish is needed.</p>
+<h2 id="build_aotpy">build_aot.py</h2>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>scripts/build_aot.py<span class="w"> </span><span class="o">[</span>--managed-csproj<span class="w"> </span>PATH<span class="o">]</span><span class="w"> </span><span class="o">[</span>--rids<span class="w"> </span>RID1,RID2<span class="o">]</span>
+<span class="w">                            </span><span class="o">[</span>--native-csproj<span class="w"> </span>PATH<span class="o">]</span><span class="w"> </span><span class="o">[</span>--out<span class="w"> </span>DIR<span class="o">]</span>
+<span class="w">                            </span><span class="o">[</span>--config<span class="w"> </span>PATH<span class="o">]</span><span class="w"> </span><span class="o">[</span>--library-version<span class="w"> </span>V<span class="o">]</span>
+<span class="w">                            </span><span class="o">[</span>--docker-image<span class="w"> </span>IMG<span class="o">]</span>
+</code></pre></div>
+<ul>
+<li><code>--managed-csproj PATH</code> (required) — used to auto-discover the AOT csproj as <code>&lt;dir&gt;.Native/&lt;aot&gt;.csproj</code>. The managed csproj's directory anchors the search.</li>
+<li><code>--rids</code> — comma-separated RIDs (default: <code>linux-arm64,linux-x64</code>). Rejects <code>osx-*</code> / <code>win-*</code> (the cross-build image doesn't ship those toolchains).</li>
+<li><code>--native-csproj PATH</code> — override the auto-discovered AOT csproj.</li>
+<li><code>--out DIR</code> — output dir for the per-RID AOT publish (default: <code>/tmp/worker-aot-out</code>).</li>
+<li><code>--config PATH</code>, <code>--library-version V</code> — same as the managed build.</li>
+<li><code>--docker-image IMG</code> — default <code>docker.haenerconsulting.com/library/dotnet-crossbuild:10.0</code>. Set to <code>''</code> to skip Docker (host must have clang + cross-binutils).</li>
+</ul>
+<p>Flow per RID:
+1. <code>docker run --rm --platform linux/{amd64,arm64} -v &lt;src&gt;:/src -v &lt;nuget-cache&gt;:/root/.nuget/packages -e VIRTUFIN_PACKAGES_USER -e VIRTUFIN_PACKAGES_TOKEN &lt;image&gt; bash -c "dotnet publish &lt;csproj&gt; -c Release -r &lt;RID&gt; -p:PublishAot=true -p:StripSymbols=false -o /&lt;out&gt;/&lt;RID&gt;"</code>
+2. The AOT compiler emits <code>&lt;AssemblyName&gt;.so</code> (or <code>&lt;AssemblyNameNative&gt;.so</code> if the <code>&lt;AssemblyName&gt;</code> differs; the script renames the file to <code>lib&lt;AssemblyName&gt;.so</code> per NuGet convention).
+3. <code>stage_native_libs</code> copies each <code>.so</code> into a single <code>runtimes/&lt;rid&gt;/native/lib*.so</code> layout.
+4. <code>write_supported_rids</code> writes the <code>.supported-rids</code> sidecar at the nupkg root (one RID per line, in build order).
+5. Emit a stub <code>.nuspec</code> (the AOT path doesn't produce one from an MSBuild target — we synthesize it).
+6. Re-pack + SHA-256 + content-addressed version, same as the managed build.</p>
+<p>The Docker invocation mounts the worker's <code>src/</code> directory at <code>/src</code> and the per-RID publish output at <code>/&lt;out&gt;</code>. The AOT csproj's <code>&lt;Compile Include="..\&lt;managed&gt;\Logic.cs"/&gt;</code> resolves correctly inside the container.</p>
+<h2 id="build_bothsh">build_both.sh</h2>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/build_both.sh<span class="w"> </span><span class="o">[</span>--rids<span class="w"> </span>RID1,RID2<span class="o">]</span><span class="w"> </span><span class="o">[</span>--out<span class="w"> </span>DIR<span class="o">]</span><span class="w"> </span><span class="o">[</span>--no-clean<span class="o">]</span><span class="w"> </span><span class="o">[</span>--skip-managed<span class="o">]</span><span class="w"> </span><span class="o">[</span>--skip-aot<span class="o">]</span>
+</code></pre></div>
+<ul>
+<li><code>--rids</code> — comma-separated RIDs (default: <code>linux-arm64,linux-x64</code>).</li>
+<li><code>--out DIR</code> — output dir for the combined nupkg (default: <code>&lt;repo&gt;/build/&lt;PackageId&gt;.nupkg.both/</code>).</li>
+<li><code>--no-clean</code> — don't delete the output dir before building.</li>
+<li><code>--skip-managed</code> / <code>--skip-aot</code> — skip one of the sub-builds (useful for incremental rebuilds when only one of the two csprojs has changed).</li>
+</ul>
+<p>Flow:
+1. Subprocess <code>build_managed.py</code> (or skip).
+2. Subprocess <code>build_aot.py</code> (or skip).
+3. Stage the managed nupkg's <code>lib/&lt;tfm&gt;/*.dll</code> into a single staging dir.
+4. Stage the AOT nupkg's <code>runtimes/&lt;rid&gt;/native/lib*.so</code> + <code>.supported-rids</code> into the same staging dir.
+5. Emit a combined <code>.nuspec</code> (<code>&lt;PackageId&gt;</code> matches both paths; <code>&lt;virtufinLibrary&gt;</code> matches the assembly basename).
+6. Deterministic mtimes (<code>find … -exec touch -t 198001010000</code>) so the SHA-256 is a pure function of file contents.
+7. Re-pack + SHA-256 + content-addressed version.
+8. Verify that the managed and AOT sub-builds' versions match (catches the case where the worker source has diverged between the two targets).</p>
+<h2 id="the-shared-helpers-in-commonscriptsbuild_managedpy">The shared helpers in @common/scripts/build_managed.py</h2>
+<p>These are imported by the AOT and both-orchestrator scripts. Don't import them from worker code; the <code>python3 scripts/...</code> wrappers are the only intended entry point.</p>
+<ul>
+<li><code>sha256_file(path)</code> — SHA-256 of a file, 64KB chunks.</li>
+<li><code>rewrite_nuspec_version(stage_dir, package_id, new_version)</code> — in-place regex replace of <code>&lt;version&gt;...&lt;/version&gt;</code> in <code>&lt;package_id&gt;.nuspec</code>.</li>
+<li><code>repack_nupkg(stage_dir, nupkg_path)</code> — zip the stage dir with FIXED entry mtimes (1980-01-01 00:00) and <code>zip -X</code> to strip Unix extras. The output is byte-stable across rebuilds of unchanged source.</li>
+<li><code>extract_nupkg(nupkg_path, stage_dir)</code> — unzip for re-pack (used by the version-rewrite step).</li>
+<li><code>read_package_id_from_csproj(csproj)</code> — reads <code>&lt;PackageId&gt;</code> (falls back to <code>&lt;AssemblyName&gt;</code>, then <code>csproj.stem</code>).</li>
+<li><code>read_library_version(worker_root)</code> — reads <code>LIBRARY_VERSION=</code> from <code>&lt;worker_root&gt;/versions.env</code>; returns <code>"0.0.0"</code> if absent.</li>
+</ul>
+<h2 id="see-also">See also</h2>
+<ul>
+<li><strong><a href="../packaging/">Packaging Modes</a></strong> — when to pick which mode</li>
+<li><strong><a href="../runtime-arch-check/">Runtime Arch Check</a></strong> — how the <code>.supported-rids</code> sidecar is consumed</li>
+<li><strong><a href="../engines/">Engines</a></strong> — the DotNetDll vs NativeDll contrast in detail</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <div style="display:table;width:100%">
+  <span style="display:table-cell">&copy; 2026 Häner Consulting. All Rights Reserved.</span>
+  <span style="display:table-cell;text-align:right">2026-07-15T07:05:15Z</span>
+</div>
+
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,21 @@
+/* Custom styles for the Virtufin Workers docs site. */
+
+.md-typeset .md-footer-meta-inner h4 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    color: var(--md-default-fg-color);
+    font-weight: 600;
+}
+
+.md-typeset .md-footer-meta-inner ul {
+    list-style: disc;
+    padding-left: 1.5em;
+}
+
+.md-typeset .md-footer-meta-inner ul li {
+    margin-bottom: 0.25em;
+}
+
+.md-typeset .md-footer-meta-inner a {
+    color: var(--md-primary-fg-color);
+}
