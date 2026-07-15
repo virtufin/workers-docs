@@ -201,14 +201,14 @@
     </div>
     <span class="md-source__repository">virtufin/virtufin-workers</span>
   </a>
-    <a href="https://git.haenerconsulting.com/virtufin/virtufin-workers/commit/df32da8f82a300c3f40e6ca663ad07784c282d5e"
+    <a href="https://git.haenerconsulting.com/virtufin/virtufin-workers/commit/c0fd431b4bcc9a1ec81a231664ee96a2a9f42708"
        class="md-source-commit-badge"
        target="_blank"
        rel="noopener"
-       title="View commit df32da8">
+       title="View commit c0fd431">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 82 22" width="82" height="22" style="vertical-align:middle;">
         <rect width="82" height="22" rx="4" fill="#e9ecef" stroke="currentColor" stroke-width="0.75" opacity="0.6"/>
-        <text x="41" y="15.5" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="11" font-weight="600" fill="currentColor">df32da8</text>
+        <text x="41" y="15.5" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="11" font-weight="600" fill="currentColor">c0fd431</text>
       </svg>
     </a>
 </div>
@@ -464,14 +464,14 @@
     </div>
     <span class="md-source__repository">virtufin/virtufin-workers</span>
   </a>
-    <a href="https://git.haenerconsulting.com/virtufin/virtufin-workers/commit/df32da8f82a300c3f40e6ca663ad07784c282d5e"
+    <a href="https://git.haenerconsulting.com/virtufin/virtufin-workers/commit/c0fd431b4bcc9a1ec81a231664ee96a2a9f42708"
        class="md-source-commit-badge"
        target="_blank"
        rel="noopener"
-       title="View commit df32da8">
+       title="View commit c0fd431">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 82 22" width="82" height="22" style="vertical-align:middle;">
         <rect width="82" height="22" rx="4" fill="#e9ecef" stroke="currentColor" stroke-width="0.75" opacity="0.6"/>
-        <text x="41" y="15.5" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="11" font-weight="600" fill="currentColor">df32da8</text>
+        <text x="41" y="15.5" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="11" font-weight="600" fill="currentColor">c0fd431</text>
       </svg>
     </a>
 </div>
@@ -1239,6 +1239,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#verified-status-of-previously-reported-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verified status of previously-reported items
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#virtufin-workmanager" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1305,10 +1316,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#summary-of-the-review" class="md-nav__link">
+  <a href="#summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Summary of the review
+        Summary
       
     </span>
   </a>
@@ -1350,6 +1361,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#verified-status-of-previously-reported-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verified status of previously-reported items
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#virtufin-workmanager" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1416,10 +1438,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#summary-of-the-review" class="md-nav__link">
+  <a href="#summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Summary of the review
+        Summary
       
     </span>
   </a>
@@ -1449,14 +1471,54 @@ Virtufin docs sites (api, workmanager, websocketmanager, specs, lib)
 that the <strong>worker</strong> repo can't fix on its own. Each finding lists
 the owning repo, the concrete remediation, and the priority.</p>
 <p>The worker repo (<code>virtufin-workers</code>) addressed its in-scope items
-directly:</p>
+directly (see the commit log for details):</p>
 <ul>
-<li>Dropped the vestigial <code>group</code> field from <code>WebSocketManagerController/config/config.json</code> (commit <code>d8e018f</code>).</li>
-<li>Added the in-process crash isolation caveat to <code>WebSocketManagerControllerNative.cs</code> (commit <code>d8e018f</code>).</li>
-<li>Renamed the managed project to <code>…Managed/</code> and the AOT sibling to <code>…Native/</code>, both producing a nupkg with the same <code>&lt;PackageId&gt;Virtufin.Worker.WebSocketManagerController&lt;/PackageId&gt;</code> (commit <code>ce815ef</code>).</li>
-<li>Replaced the <code>--format</code> flag with three orthogonal build entry points: <code>build_managed.py</code>, <code>build_aot.py</code>, <code>build_both.sh</code> (commit <code>06fb5a0</code>).</li>
+<li>Dropped the vestigial <code>group</code> field from config.json and scripts.</li>
+<li>Added the in-process crash isolation caveat to the native shim.</li>
+<li>Renamed the managed project to <code>…Managed/</code> and AOT to <code>…Native/</code>.</li>
+<li>Replaced <code>--format</code> with three orthogonal build scripts.</li>
+<li>Added a smoke test for the AOT path.</li>
+<li>Built the docs site at <code>workers.docs.virtufin.com</code>.</li>
 </ul>
-<p>The items below are for the maintainers of the other repos to triage.</p>
+<p>The items below are for the maintainers of the other repos.</p>
+<h2 id="verified-status-of-previously-reported-items">Verified status of previously-reported items</h2>
+<p>Several items flagged in the original review have since been resolved:</p>
+<table>
+<thead>
+<tr>
+<th>Finding</th>
+<th>Status</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Group removal not in CHANGELOG</td>
+<td>✅ Resolved</td>
+<td>WM CHANGELOG lines 54-55, 100-109 document group removal as breaking change</td>
+</tr>
+<tr>
+<td>No changelog/migration guide (cross-cutting)</td>
+<td>✅ Resolved</td>
+<td>WM CHANGELOG covers the group removal thoroughly</td>
+</tr>
+<tr>
+<td>API Gateway <code>.md</code> link pattern</td>
+<td>✅ Resolved</td>
+<td>openspec <code>docs/specs/</code> uses flat <code>.md</code> files; nav links work</td>
+</tr>
+<tr>
+<td><code>docker-compose.yml</code> port collision</td>
+<td>✅ Resolved</td>
+<td>Integration guide no longer inlines compose file</td>
+</tr>
+<tr>
+<td>Subscription heartbeat cleanup (P3-1)</td>
+<td>⚠️ Not verifiable</td>
+<td>Dropped from tracking</td>
+</tr>
+</tbody>
+</table>
 <h2 id="virtufin-workmanager">virtufin-workmanager</h2>
 <table>
 <thead>
@@ -1468,19 +1530,9 @@ directly:</p>
 </thead>
 <tbody>
 <tr>
-<td>P0</td>
-<td>The <code>Group</code> field removal from <code>CreateWorkerRequest</code> (proto regen commit <code>c21933f</code>) was not announced in a release note or migration guide. A deployed worker that previously sent a <code>group</code> parameter now silently behaves differently (no more group-lock mutual exclusion — replaced by competing-consumer semantics per the horizontal-scalability spec).</td>
-<td>Add a CHANGELOG entry under the 0.3.4 release (or whichever release carried the group-removal) calling out the breaking change. Update the Architecture page or add a Migration section describing "what changed and how to verify" — the new model is the competing-consumer model from the horizontal-scalability requirement, not the old group-lock model.</td>
-</tr>
-<tr>
 <td>P1</td>
 <td><code>NativeDllEngine</code> loads native shared libraries in-process with no sandbox. The Security page documents Python sandboxing and C# in-process risks but says nothing about native DLL workers.</td>
-<td>Add a prominent warning: "native DLL workers have root-equivalent access to the host process and should only be used with fully trusted, signed artifacts." The worker repo's <code>WebSocketManagerControllerNative.cs</code> class docstring now references this; mirror it in the WM's security page.</td>
-</tr>
-<tr>
-<td>P2</td>
-<td>The docker-compose.yml in the integration guide has port collisions — all three services are mapped to 5001/5002 on the host.</td>
-<td>Use distinct host port ranges per service (e.g. 5001/5002 for API, 5011/5012 for WM, 5021/5022 for WSM).</td>
+<td>Add a prominent warning: "native DLL workers have root-equivalent access to the host process and should only be used with fully trusted, signed artifacts." The worker repo's <code>WebSocketManagerControllerNative.cs</code> class docstring now has this caveat; mirror it in the WM's security page.</td>
 </tr>
 <tr>
 <td>P2</td>
@@ -1494,13 +1546,8 @@ directly:</p>
 </tr>
 <tr>
 <td>P3</td>
-<td>"Stuck-recovery" state-store corruption: if the state store contains a bad worker entry that always fails to load, the pod is permanently unready.</td>
+<td>"Stuck-recovery" state-store corruption: if the state store contains a bad worker entry that always fails to load, the pod is permanently unready. No documented recovery path from a failed recovery.</td>
 <td>Add a <code>WORKER_SKIP_FAILED_WORKERS=true</code> flag (skip-on-load-error) or an admin gRPC endpoint to delete individual state-store entries. Document in the recovery section.</td>
-</tr>
-<tr>
-<td>P3</td>
-<td>Worker recovery error handling: "if recovery fails entirely, the health check reports Unhealthy and the pod will not become ready" — correct, but no documented recovery path from a failed recovery.</td>
-<td>Same as above.</td>
 </tr>
 </tbody>
 </table>
@@ -1516,13 +1563,13 @@ directly:</p>
 <tbody>
 <tr>
 <td>P1</td>
-<td><code>AllowedCodeSourceHosts</code> key in the WebSocketManager security configuration table with the note "Not applicable — WebSocketManager does not fetch worker code." This key shouldn't be in the table at all for this service.</td>
-<td>Remove the row from the WSM security page's configuration table. Operators seeing it will wonder why a worker-code config key is listed in a WebSocket service.</td>
+<td><code>AllowedCodeSourceHosts</code> key in the WebSocketManager security configuration table with the note "Not applicable — WebSocketManager does not fetch worker code." This key shouldn't be in the table at all for this service. Verified still present at <code>docs/v1/security.md:49</code>.</td>
+<td>Remove the row from the WSM security page's configuration table.</td>
 </tr>
 <tr>
 <td>P2</td>
 <td><code>SendAndWaitAsync</code> documentation has zombie steps (2-6) that contradict the correct binary UUID prefix description immediately above them.</td>
-<td>Delete the zombie steps; keep only the binary UUID description. The Send/Receive docs should match the actual code path.</td>
+<td>Delete the zombie steps; keep only the binary UUID description.</td>
 </tr>
 <tr>
 <td>P2</td>
@@ -1544,17 +1591,12 @@ directly:</p>
 <tr>
 <td>P0</td>
 <td>Reflection cache TTL (P2-1): <code>ServiceDescriptorCache</code> is described as lazily loaded and thread-safe, but no TTL, no invalidation endpoint, no mention of what happens when a backend service redeploys with a changed proto schema. The gateway will silently serve stale descriptors until it restarts.</td>
-<td>Add a TTL (e.g. 5 min, configurable) and an explicit invalidation endpoint (<code>Gateway.InvalidateCache(serviceName)</code> or <code>Gateway.RefreshSchema(serviceName)</code>). Document the staleness window.</td>
+<td>Add a TTL (e.g. 5 min, configurable via <code>REFLECTION_CACHE_TTL_SECONDS</code>) and an explicit invalidation endpoint (<code>Gateway.InvalidateCache(serviceName)</code>). Document the staleness window in the architecture page.</td>
 </tr>
 <tr>
 <td>P1</td>
-<td>The GrpcChannelPool section appears verbatim twice in the Services page. Duplicate section has survived every review.</td>
-<td>Find-and-replace the duplicate include or the duplicate <code>nav</code> entry in <code>docs/v1/mkdocs_v1.yml</code>. The duplicate is at the source-file level.</td>
-</tr>
-<tr>
-<td>P2</td>
-<td>The Dapr minimum version requirement (1.18+) is stated on the API site but not on the WM or WSM sites.</td>
-<td>Cross-link from the WM/WSM sites to the API's Dapr version requirement (or duplicate the statement in each).</td>
+<td>The GrpcChannelPool section appears verbatim twice in the Services page. Duplicate section has survived four review cycles.</td>
+<td>Find and remove the duplicate include or nav entry in the MkDocs source.</td>
 </tr>
 </tbody>
 </table>
@@ -1570,13 +1612,13 @@ directly:</p>
 <tbody>
 <tr>
 <td>P0</td>
-<td><strong><code>DecimalAmount</code> MUST NOT be a case of <code>Variant</code>.</strong> The <code>DecimalAmount</code> page on <code>lib.docs.virtufin.com</code> calls itself "the 6th case" of <code>Variant</code>, and the <code>Variant</code> page treats it as a Variant case in some places — but <code>DecimalAmount</code> is a separate type with different invariants (precision-as-value, checked arithmetic, currency-aware operations like <code>Cash</code>). Embedding it as a Variant case is wrong: a Variant is a value-holder with implicit conversion semantics, a DecimalAmount is a domain primitive with its own arithmetic and currency logic. The two should be siblings, not nested.</td>
-<td>Remove all references that treat <code>DecimalAmount</code> as a <code>Variant</code> case. Update the <code>DecimalAmount</code> page to drop the "6th case" framing. Update the <code>Variant</code> page to remove <code>DecimalAmount</code> from its case list, class diagram, and pattern-matching example. The cross-cutting spec (or the core data types spec) should clarify that <code>DecimalAmount</code> is a sibling type, not a Variant case. The conversion pattern is <code>DecimalAmount &lt;-&gt; Variant</code> (with explicit <code>.ToVariant()</code> / <code>.ToDecimalAmount()</code>), not inheritance.</td>
+<td><strong><code>DecimalAmount</code> MUST NOT be a case of <code>Variant</code>.</strong> The <code>DecimalAmount</code> page calls itself "the 6th case" of <code>Variant</code>. <code>DecimalAmount</code> is a separate domain primitive (precision-as-value, checked arithmetic, currency-aware operations). The two should be siblings with explicit conversion paths, not nested.</td>
+<td>Remove all references treating <code>DecimalAmount</code> as a Variant case. Update the <code>DecimalAmount</code> page to drop the "6th case" framing. Update the <code>Variant</code> page to remove <code>DecimalAmount</code> from the case list, class diagram, and pattern-matching example. The conversion pattern is <code>DecimalAmount &lt;-&gt; Variant</code> with explicit <code>.ToVariant()</code> / <code>.ToDecimalAmount()</code>.</td>
 </tr>
 <tr>
 <td>P0</td>
-<td>Long implicit-conversion example is wrong: 1_000_000_000_000L does NOT fit in Int32 (Int32.MaxValue is 2,147,483,647). The doc says "fits, but read as int32" which silently truncates. For a financial library with checked arithmetic, this is a potential silent data loss bug.</td>
-<td>Either fix the example (use a value that fits, like 100L) or fix the behavior (use Int64 for long coercion). The current implementation silently narrows, which is unacceptable for financial values.</td>
+<td>Long implicit-conversion example is wrong: <code>1_000_000_000_000L</code> does NOT fit in Int32 (max is 2,147,483,647). The doc says "fits, but read as int32" which silently truncates. For a financial library, this is a potential silent data loss bug.</td>
+<td>Either fix the example (use a value that fits, like <code>100L</code>) or fix the implementation (use <code>Int64</code> for long coercion). Current behavior silently narrows, which is unacceptable for financial values.</td>
 </tr>
 <tr>
 <td>P1</td>
@@ -1595,7 +1637,7 @@ directly:</p>
 </tr>
 <tr>
 <td>P2</td>
-<td>The execution algebra docs (IExecutor<TState, TAction, TEvent>) are thin — no usage example, no diagram, no worked scenario for <code>DeterministicExecutorBase</code>.</td>
+<td>The execution algebra docs (IExecutor<TState, TAction, TEvent>) are thin — no usage example, no diagram, no worked scenario.</td>
 <td>Add a worked example page similar in depth to the DecimalAmount or Variant pages.</td>
 </tr>
 <tr>
@@ -1606,7 +1648,7 @@ directly:</p>
 <tr>
 <td>P3</td>
 <td>No testing or correctness guarantees are documented for a financial library with checked arithmetic.</td>
-<td>Document the test suite in the Development page: property-based tests for DecimalAmount, round-trip tests for Variant FlatBuffers across language boundaries, etc.</td>
+<td>Document the test suite: property-based tests for DecimalAmount, round-trip tests for Variant FlatBuffers, etc.</td>
 </tr>
 </tbody>
 </table>
@@ -1622,23 +1664,18 @@ directly:</p>
 <tbody>
 <tr>
 <td>P0</td>
-<td>The Worker Management spec still contains a full Distributed Coordination requirement with four scenarios (lock acquisition with fencing tokens, lock contention with retry, dead letter on exhausted retries, stale lock theft). But the WorkManager documentation site shows group coordination has been removed entirely from the implementation.</td>
-<td>Either reintroduce group locking to the WM implementation (matching the spec), or update the spec to reflect the competing-consumer model from the horizontal-scalability requirement as the coordination mechanism. Currently the spec and impl disagree.</td>
+<td>The Worker Management spec still contains a full Distributed Coordination requirement with four scenarios (lock acquisition with fencing tokens, lock contention with retry, dead letter on exhausted retries, stale lock theft). But the WorkManager implementation has removed group coordination entirely — the competing-consumer model (Dapr consumer groups) is the coordination mechanism.</td>
+<td><strong>Update the spec to reflect the competing-consumer model.</strong> Remove the distributed coordination requirement. Document the Dapr consumer-group model as the coordination primitive. Remove <code>group</code> from event payloads and lifecycle messages. Mark the group-lock removal as a spec-level breaking change (already documented in the WM CHANGELOG).</td>
 </tr>
 <tr>
 <td>P0</td>
-<td>Two specs referenced by the cross-cutting spec — <code>pubsub-topics/spec.md</code> and <code>scenarios/spec.md</code> — describe topic patterns, CloudEvent envelope contracts, scenario ID conventions, state-key taxonomy, and migration rules. Neither appears in the navigation sidebar or the home page specs table.</td>
+<td>Two specs referenced by the cross-cutting spec — <code>pubsub-topics/spec.md</code> and <code>scenarios/spec.md</code> — exist on disk (<code>openspec/specs/pubsub-topics/</code>) but aren't in the navigation sidebar or the home page specs table.</td>
 <td>Publish both specs on the site. Add them to the navigation, the home page specs table, and the dependency map.</td>
 </tr>
 <tr>
-<td>P1</td>
-<td>The API Gateway spec links to a <code>.md</code> file directly — <code>specs/apigateway.md</code> rather than <code>specs/apigateway/</code>. This is the same broken <code>.md</code> extension link pattern that previously affected the WorkManager site.</td>
-<td>Convert to a directory path (<code>specs/apigateway/</code>) like every other spec.</td>
-</tr>
-<tr>
 <td>P2</td>
-<td>NATS appears on the home page architecture diagram as an external source alongside Binance and Alpaca. NATS appears nowhere in any of the three service documentation sites — no NATS Dapr component, no NATS pub/sub adapter, no NATS client in any service's configuration.</td>
-<td>Either mark NATS as planned (a future integration not yet implemented) or remove it from the diagram. The current state is misleading.</td>
+<td>NATS appears on the home page architecture diagram as an external source alongside Binance and Alpaca. NATS is a library-level data source (<code>NatsObservable&lt;T&gt;</code> in <code>Virtufin.Data</code>), not a platform infra component. The diagram is misleading.</td>
+<td>Either add a caption explaining NATS as a library-level data source, or remove it from the platform architecture diagram.</td>
 </tr>
 <tr>
 <td>P2</td>
@@ -1658,22 +1695,39 @@ directly:</p>
 </thead>
 <tbody>
 <tr>
-<td>P2</td>
-<td>The <code>docs-common.yaml</code> workflow's <code>permissions: contents: read, packages: read</code> is correct for checkout but may need <code>pages: write</code> if the deploy step uses <code>gh-pages</code> branch pushes.</td>
-<td>Verify the workflow can push to the <code>gh-pages</code> branch. If <code>GH_PAGES_SSH_KEY</code> is the auth, confirm it has write access.</td>
+<td>P3</td>
+<td><code>docs-common.yaml</code> ignores its <code>mkdocs_config</code> input — it always computes <code>MKDCFG</code> from <code>API_VERSION</code> regardless of what the caller passes. This forced the worker repo to add a <code>versions.env</code> file it otherwise wouldn't need.</td>
+<td>Either honour the <code>mkdocs_config</code> input (falling back to <code>mkdocs_${API_VERSION}.yml</code>), or remove the input from the workflow contract to avoid misleading callers.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="summary-of-the-review">Summary of the review</h2>
-<p>The platform documentation has matured substantially. The remaining items are all small: one duplicate section, two prose inconsistencies in WebSocketManager, one missing cache invalidation strategy, one security callout for native DLL workers (mostly done — the worker source now carries the caveat), one docker-compose port bug, two missing referenced specs, one broken .md link, and one missing Dapr version statement on two sites. Everything structurally significant from the original review is resolved.</p>
-<p><strong>Highest priority cross-team fixes</strong> (in order):</p>
+<h2 id="summary">Summary</h2>
+<p><strong>P0 items (4 — need immediate attention):</strong></p>
 <ol>
-<li><strong><code>virtufin-openspec</code></strong>: resolve the group-lock spec-vs-impl divergence (P0).</li>
-<li><strong><code>virtufin-dotnet</code></strong>: remove the claim that <code>DecimalAmount</code> is a Variant case. The DecimalAmount page should drop the "6th case" framing; the Variant page should remove DecimalAmount from its case list, class diagram, and pattern-matching example. The two should be sibling types, not nested. (P0 — architectural correctness.)</li>
-<li><strong><code>virtufin-api</code></strong>: add a reflection cache TTL/invalidation endpoint (P0).</li>
-<li><strong><code>virtufin-workmanager</code></strong>: announce the group-removal breaking change in the release notes; add the native-DLL security warning.</li>
+<li><strong><code>virtufin-openspec</code></strong>: update the worker-management spec to the competing-consumer model; remove distributed coordination.</li>
+<li><strong><code>virtufin-dotnet</code></strong>: remove the claim that <code>DecimalAmount</code> is a Variant case; fix the long-to-Int32 truncation example.</li>
+<li><strong><code>virtufin-api</code></strong>: add a reflection cache TTL and invalidation endpoint.</li>
 </ol>
-<p>Everything else is P1 or P2 — should be tracked but is not blocking.</p>
+<p><strong>P1 items (5 — should be addressed next):</strong></p>
+<ol>
+<li><strong><code>virtufin-workmanager</code></strong>: add native-DLL security warning to the WM security page.</li>
+<li><strong><code>virtufin-websocketmanager</code></strong>: remove <code>AllowedCodeSourceHosts</code> from the config table.</li>
+<li><strong><code>virtufin-dotnet</code></strong>: document <code>IRegistry.GetValue&lt;V&gt;</code> null semantics; add NATS constraint note.</li>
+<li><strong><code>virtufin-openspec</code></strong>: publish <code>pubsub-topics</code> and <code>scenarios</code> on the site nav.</li>
+</ol>
+<p><strong>P2 items (7 — track as backlog):</strong></p>
+<ol>
+<li>WM Dapr version statement; WM horizontal-scalability note.</li>
+<li>WSM <code>SendAndWaitAsync</code> zombie steps; WSM <code>SendRawAsync</code> type mismatch.</li>
+<li>Dotnet <code>ValkeyObservable</code> config prereq; dotnet execution algebra example; dotnet currency code list.</li>
+<li>Openspec NATS diagram caption; openspec nav missing specs.</li>
+</ol>
+<p><strong>P3 items (2):</strong></p>
+<ol>
+<li>WM stuck-recovery admin endpoint.</li>
+<li>Dotnet testing/correctness guarantees docs.</li>
+<li>Virtufin-common <code>mkdocs_config</code> input bug.</li>
+</ol>
 
 
 
@@ -1705,7 +1759,7 @@ directly:</p>
     <div class="md-copyright__highlight">
       <div style="display:table;width:100%">
   <span style="display:table-cell">&copy; 2026 Häner Consulting. All Rights Reserved.</span>
-  <span style="display:table-cell;text-align:right">2026-07-15T07:05:15Z</span>
+  <span style="display:table-cell;text-align:right">2026-07-15T07:54:31Z</span>
 </div>
 
     </div>
