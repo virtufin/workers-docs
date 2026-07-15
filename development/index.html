@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://workers.docs.virtufin.com/development/">
       
       
-        <link rel="prev" href="../ecosystem/">
+        <link rel="prev" href="../reference/nuspec/">
       
       
         <link rel="next" href="../troubleshooting/">
@@ -52,8 +52,6 @@
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../stylesheets/extra.css">
     
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -336,25 +334,6 @@
         </a>
       </li>
     
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../ecosystem/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Ecosystem
-
-      </a>
-    </li>
   
 
       
@@ -1058,33 +1037,6 @@
       
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../ecosystem/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ecosystem
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
     
   
   
@@ -1376,7 +1328,7 @@ bash<span class="w"> </span>WebSocketManagerController/scripts/build_both.py
 <ul>
 <li><strong><a href="../build-script/">Build Script</a></strong> — <code>build_managed.py</code> + <code>build_aot.py</code> + <code>build_both.py</code> reference</li>
 <li><strong><a href="../troubleshooting/">Troubleshooting</a></strong> — common build/load failures and how to diagnose them</li>
-<li><strong><a href="../ecosystem/">Ecosystem</a></strong> — the wider platform and which docs site covers what</li>
+<li><strong><a href="ecosystem.md">Ecosystem</a></strong> — the wider platform and which docs site covers what</li>
 </ul>
 
 
@@ -1400,23 +1352,25 @@ bash<span class="w"> </span>WebSocketManagerController/scripts/build_both.py
         
       </main>
       
-        <!--
-  Cross-site footer partial. Renders below the page content on every
-  page. Lists the other Virtufin docs sites so a developer can find
-  related material without leaving the platform.
--->
-<footer class="md-typeset md-footer-meta-inner">
-  <hr>
-  <h4>See also</h4>
-  <ul>
-    <li><a href="https://specs.docs.virtufin.com/">Virtufin OpenSpec</a> — normative specs (cross-cutting, per-service, deployment, CI/CD)</li>
-    <li><a href="https://lib.docs.virtufin.com/">Virtufin .NET library</a> — Variant, FlatBuffers, DecimalAmount, EAV, observables</li>
-    <li><a href="https://api.docs.virtufin.com/">Virtufin API gateway</a> — Gateway.InvokeJson, services config, security</li>
-    <li><a href="https://workmanager.docs.virtufin.com/">Virtufin WorkManager</a> — worker host process, engines, recovery, integration guide</li>
-    <li><a href="https://websocketmanager.docs.virtufin.com/">Virtufin WebSocketManager</a> — WebSocket proxy, Send protocol, connection ownership</li>
-    <li><a href="https://git.haenerconsulting.com/virtufin/virtufin-examples">Virtufin examples</a> — worked example workers and clients</li>
-    <li><a href="https://git.haenerconsulting.com/virtufin/virtufin-common">Virtufin common</a> — cross-build image, shared CI workflows, docs-common</li>
-  </ul>
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <div style="display:table;width:100%">
+  <span style="display:table-cell">&copy; 2026 Häner Consulting. All Rights Reserved.</span>
+  <span style="display:table-cell;text-align:right">2026-07-15T11:19:08Z</span>
+</div>
+
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
 </footer>
       
     </div>
