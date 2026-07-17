@@ -12,7 +12,7 @@ implemented in any of the languages supported by the WorkManager's engines:
 
 | Language | Engine (MIME) | Artefact |
 |----------|---------------|----------|
-| C# (DLL) | `application/x-dotnet-dll` | `worker.nupkg` of published DLLs |
+| C# (DLL) | `application/x-dotnet-dll` | `<PackageId>.nupkg` of published DLLs (e.g. `Virtufin.Worker.WebSocketManagerController.nupkg`) |
 | C# (single file) | `text/x-csharp` | single `.cs` file |
 | Python | `text/x-python` | `.py` source (or zip of dependencies) |
 | TypeScript | n/a (runs in user process) | `.ts` / `.js` source (or zip) |
@@ -30,12 +30,15 @@ virtufin-workers/
 ├── WebSocketManagerController/        # First worker
 │   ├── versions.env                    # LIBRARY_VERSION pin (per worker)
 │   ├── src/
-│   │   └── Virtufin.Worker.WebSocketManagerController/
-│   │       ├── Virtufin.Worker.WebSocketManagerController.csproj
-│   │       └── WebSocketManagerController.cs
-│   └── scripts/
-│       ├── build.sh                    # dotnet publish → worker.nupkg
-│       └── publish.sh                  # build + upload to Gitea NuGet package
+│   │   ├── Virtufin.Worker.WebSocketManagerController.Managed/  # managed (JIT) project
+│   │   └── Virtufin.Worker.WebSocketManagerController.Native/   # NativeAOT project
+│   ├── tests/
+│   └── scripts/                        # thin wrappers over @common/scripts/
+│       ├── build_managed.py            # dotnet publish → <PackageId>.nupkg (managed)
+│       ├── build_aot.py                # NativeAOT variant
+│       ├── build_both.py               # both variants
+│       └── publish.py                  # upload <PackageId>.nupkg to Gitea NuGet
+├── @common/scripts/                    # shared Python build/publish/ops helpers
 └── AGENTS.md                           # project-specific agent guidelines
 ```
 
@@ -51,8 +54,9 @@ virtufin-workers/
    - TypeScript: a module that implements the worker interface exported from
      `@virtufin/worker`.
 3. Add a `versions.env` (with `LIBRARY_VERSION`) at the worker root.
-4. Add a `scripts/build.py` (and `scripts/publish.py`) that produces the
-   deployable artefact and uploads it to the Gitea NuGet package.
+4. Add `scripts/build_managed.py` (plus `build_aot.py`/`build_both.py` if the
+   worker ships a NativeAOT variant) and `scripts/publish.py` as thin wrappers
+   over `@common/scripts/`, modelled on the WebSocketManagerController ones.
 5. Bump `LIBRARY_VERSION` in the worker's `versions.env` if the change is a release.
 
 ## Deploying a worker

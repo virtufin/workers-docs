@@ -1371,7 +1371,7 @@
 </ul>
 </li>
 <li><strong>Listens</strong> on the response topic for command results. Each command is sent with a <code>correlationid</code> so the matching response can be identified.</li>
-<li><strong>Reports</strong> when setup is complete (<code>=== Setup complete. Listening on ... ===</code>). The script then exits; the workers keep running in the WorkManager.</li>
+<li><strong>Reports</strong> when setup is complete (<code>=== Setup complete. Consuming ... ===</code>), then <strong>subscribes</strong> to the orderbook topic via the API gateway's <code>Pubsub.Subscribe</code> and prints one log line per depth event (stream name, bid/ask level counts) until Ctrl+C. The workers keep running in the WorkManager after the script stops.</li>
 </ol>
 <h2 id="configuration">Configuration</h2>
 <p><code>config.json</code> (in the worker root) provides:</p>
@@ -1395,8 +1395,8 @@
 </ul>
 <h2 id="what-the-script-doesnt-do">What the script doesn't do</h2>
 <ul>
-<li><strong>It doesn't manage the workers after setup.</strong> Once <code>=== Setup complete ===</code> is printed, the script exits. Killing the script does NOT kill the workers — they're in the WorkManager. To stop them, you'd need to call <code>DeleteWorker</code> for each (the example doesn't demonstrate this; see <code>scripts/delete_worker.py</code> in the worker root).</li>
-<li><strong>It doesn't subscribe to the orderbook output stream.</strong> The workers publish to <code>act.exchange.binance.orderbook.update</code> (their default), but the script doesn't read that stream. The orderbook is consumable by other services via the API gateway's pubsub RPCs.</li>
+<li><strong>It doesn't manage the workers after setup.</strong> After setup the script only consumes the output stream; killing the script does NOT kill the workers — they're in the WorkManager. To stop them, you'd need to call <code>DeleteWorker</code> for each (the example doesn't demonstrate this; see <code>scripts/delete_worker.py</code> in the worker root).</li>
+<li><strong>It doesn't render an order book.</strong> The script subscribes to <code>act.exchange.binance.orderbook.update</code> and prints one log line per event (stream name, bid/ask counts) — it doesn't maintain book state. See <code>binance_clob_example.py</code> in virtufin-examples for a consumer that builds a local order book.</li>
 <li><strong>It doesn't run on the worker's host.</strong> The script can run anywhere — it talks to the WorkManager via the API gateway's gRPC port (<code>localhost:5002</code> by default).</li>
 </ul>
 <h2 id="the-handler-protocol-in-detail">The handler protocol in detail</h2>
@@ -1500,7 +1500,7 @@
     <div class="md-copyright__highlight">
       <div style="display:table;width:100%">
   <span style="display:table-cell">&copy; 2026 Häner Consulting. All Rights Reserved.</span>
-  <span style="display:table-cell;text-align:right">2026-07-15T11:19:08Z</span>
+  <span style="display:table-cell;text-align:right">2026-07-17T05:24:18Z</span>
 </div>
 
     </div>
