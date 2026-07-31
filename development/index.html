@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1311,14 +1311,21 @@ bash<span class="w"> </span>WebSocketManagerController/scripts/build_both.py
 </code></pre></div></p>
 <h2 id="tests">Tests</h2>
 <p><code>WebSocketManagerController/tests/Virtufin.Worker.WebsocketManagerController.Tests/</code> is a C# xunit test project for the <strong>managed</strong> path only. It uses a <code>TestData/ProcessAsync/InvalidInputs.json</code> data file (Theory tests) plus a couple of Fact tests for correlationId and replyTopic behavior. The tests instantiate the worker directly and call <code>ProcessAsync</code>.</p>
-<p>Note: the test project's <code>&lt;ProjectReference&gt;</code> path is relative to the legacy <code>Virtufin.Worker.WebSocketManagerController</code> path; after the rename to <code>…Managed/</code>, the reference is stale. Update the reference path before running the test project.</p>
 <p>The AOT path has no unit tests in this repo (the only test surface is the smoke test, which runs the actual AOT compile). The <code>virtufin-workmanager</code> repo has unit tests for the <code>NativeDllEngine.LoadFromNupkg</code> flow, but those test the engine, not the worker.</p>
 <h2 id="ci">CI</h2>
-<p><code>/.github/workflows/docs.yaml</code> (calls <code>virtufin-common/.github/workflows/docs-common.yaml@master</code> with <code>docs_repo: virtufin/workers-docs</code>) and <code>/.github/workflows/docs-lint.yaml</code> (calls <code>docs-lint-common.yaml@master</code>) are the two CI surfaces for this repo.</p>
-<p>There is <strong>no CI workflow for the AOT build smoke test</strong> (per the user's explicit decision; the smoke test is a local script in <code>scripts/</code>).</p>
+<p>Each worker has its own <code>.github/workflows/&lt;workername&gt;-nuget.yaml</code>, a thin
+caller of the shared <code>virtufin/virtufin-common/.github/workflows/worker-nuget-common.yaml</code>
+reusable workflow: on push to <code>master</code> (path-filtered to that worker's
+directory), it runs the worker's tests, builds (managed-only, or
+managed+NativeAOT via Docker when the caller sets <code>ships_native: true</code>),
+and publishes to the Gitea NuGet feed. This is the actual publish path now
+— see <code>AGENTS.md</code>'s "Build &amp; publish a worker" section.</p>
+<p><code>/.github/workflows/docs.yaml</code> (calls <code>virtufin-common/.github/workflows/docs-common.yaml@master</code> with <code>docs_repo: virtufin/workers-docs</code>) and <code>/.github/workflows/docs-lint.yaml</code> (calls <code>docs-lint-common.yaml@master</code>) are the doc-site CI surfaces.</p>
+<p>The <code>smoke_test_aot.py</code> script remains a local-only tool (not run in CI) for
+verifying the AOT path end-to-end beyond what the CI build step itself
+already confirms.</p>
 <h2 id="conventions">Conventions</h2>
 <ul>
-<li><strong>LIBRARY_VERSION</strong> in <code>WebSocketManagerController/config/last_published.version</code> is updated by <code>scripts/publish.py</code> after a successful Gitea upload. The next build's "Version changed" report compares against this file.</li>
 <li><strong><code>scripts/build_managed.py</code> and <code>scripts/build_aot.py</code> are thin pass-through wrappers</strong> — the real logic is in <code>@common/scripts/build_*.py</code>. The wrapper just sets paths.</li>
 <li><strong>Both csproj files</strong> (<code>Managed/</code> and <code>Native/</code>) share the same <code>&lt;AssemblyName&gt;</code> so the nupkg's single <code>&lt;virtufinLibrary&gt;</code> value resolves to either the <code>.dll</code> or the <code>.so</code> depending on which engine loads it.</li>
 <li><strong>The AOT csproj's <code>&lt;Compile Include="..\...Managed\Logic.cs" Link="Logic.cs" /&gt;</code></strong> links the shared handler logic from the managed project dir. Path is relative to the AOT csproj's location, so no absolute paths.</li>
@@ -1361,7 +1368,7 @@ bash<span class="w"> </span>WebSocketManagerController/scripts/build_both.py
     <div class="md-copyright__highlight">
       <div style="display:table;width:100%">
   <span style="display:table-cell">&copy; 2026 Häner Consulting. All Rights Reserved.</span>
-  <span style="display:table-cell;text-align:right">2026-07-17T05:24:18Z</span>
+  <span style="display:table-cell;text-align:right">2026-07-31T02:32:02Z</span>
 </div>
 
     </div>
@@ -1385,7 +1392,7 @@ bash<span class="w"> </span>WebSocketManagerController/scripts/build_both.py
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

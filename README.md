@@ -38,6 +38,7 @@ virtufin-workers/
 │       ├── build_aot.py                # NativeAOT variant
 │       ├── build_both.py               # both variants
 │       └── publish.py                  # upload <PackageId>.nupkg to Gitea NuGet
+├── HttpGetWorker/                      # GETs a URL (env var) on each trigger, emits the response
 ├── @common/scripts/                    # shared Python build/publish/ops helpers
 └── AGENTS.md                           # project-specific agent guidelines
 ```
@@ -53,11 +54,15 @@ virtufin-workers/
      `virtufin.worker_devkit`).
    - TypeScript: a module that implements the worker interface exported from
      `@virtufin/worker`.
-3. Add a `versions.env` (with `LIBRARY_VERSION`) at the worker root.
+3. Add a `versions.env` (with `LIBRARY_VERSION`) and a `CHANGELOG.md` at the
+   worker root.
 4. Add `scripts/build_managed.py` (plus `build_aot.py`/`build_both.py` if the
    worker ships a NativeAOT variant) and `scripts/publish.py` as thin wrappers
    over `@common/scripts/`, modelled on the WebSocketManagerController ones.
-5. Bump `LIBRARY_VERSION` in the worker's `versions.env` if the change is a release.
+5. Add `.github/workflows/<workername>-nuget.yaml`, a thin caller of the
+   shared `worker-nuget-common.yaml` reusable workflow (see AGENTS.md), so
+   publishing happens in CI on push to `master` rather than by hand.
+6. Bump `LIBRARY_VERSION` in the worker's `versions.env` if the change is a release.
 
 ## Deploying a worker
 
