@@ -39,6 +39,10 @@ virtufin-workers/
 │       ├── build_both.py               # both variants
 │       └── publish.py                  # upload <PackageId>.nupkg to Gitea NuGet
 ├── HttpGetWorker/                      # GETs a URL (env var) on each trigger, emits the response
+├── HelloPython/                        # Python worker: greets the name in the event data
+│   └── src/hello_python.py             # deployed as source (text/x-python), no build step
+├── GetTimePython/                      # Python worker: GETs the UTC time API on each trigger
+│   └── src/gettime_python.py           # deployed as source (text/x-python), no build step
 ├── @common/scripts/                    # shared Python build/publish/ops helpers
 └── AGENTS.md                           # project-specific agent guidelines
 ```
@@ -50,8 +54,10 @@ virtufin-workers/
 2. Under it, create `src/<LanguageWorkerProjectName>/` with the worker source.
    - C#: a `.csproj` targeting `net10.0` that references `Virtufin.Worker.DevKit`
      and implements `IWorker` (directly or via `CommandWorker` / `ApiCommandWorker`).
-   - Python: a module that subclasses `WorkerBase` (or one of its variants from
-     `virtufin.worker_devkit`).
+   - Python: a module exposing a module-level `Process(cloud_event)` that the
+     WorkManager Python engine calls (returns a CloudEvent dict, or `None`),
+     or a `WorkerBase` subclass from `virtufin.worker_devkit`. Deployed as
+     source (`text/x-python`) — no build/publish step.
    - TypeScript: a module that implements the worker interface exported from
      `@virtufin/worker`.
 3. Add a `versions.env` (with `LIBRARY_VERSION`) and a `CHANGELOG.md` at the
