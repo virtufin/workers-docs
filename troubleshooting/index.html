@@ -1451,7 +1451,7 @@
 <h2 id="build_aotpy-hangs-on-docker-run">"build_aot.py hangs on <code>docker run</code>"</h2>
 <p>Two common causes:</p>
 <ol>
-<li><strong>The cross-build image isn't local.</strong> The script's <code>maybe_pull_image</code> only runs on <code>--pull-image</code>. Without that flag, the script will time out trying to pull. Run with <code>--pull-image</code>, or pre-pull: <code>docker pull docker.haenerconsulting.com/library/dotnet-crossbuild:10.0</code>.</li>
+<li><strong>The cross-build image isn't local.</strong> The script's <code>maybe_pull_image</code> only runs on <code>--pull-image</code>. Without that flag, the script will time out trying to pull. Run with <code>--pull-image</code>, or pre-pull: <code>docker pull docker.haenerconsulting.com/library/dotnet-crossbuild:10</code>.</li>
 <li><strong>On Apple Silicon, the cross-build image runs via <code>qemu-x86_64</code> emulation.</strong> This is slow (~15+ minutes for an AOT compile). The compile is happening, just slowly. Let it finish, or run on an x86_64 host.</li>
 </ol>
 <h2 id="aot-publish-fails-with-error-msb4184-gettargetframeworkversionnet100-2">"AOT publish fails with <code>error MSB4184: ... GetTargetFrameworkVersion(net10.0, 2)</code>"</h2>
@@ -1543,7 +1543,7 @@
     <div class="md-copyright__highlight">
       <div style="display:table;width:100%">
   <span style="display:table-cell">&copy; 2026 Häner Consulting. All Rights Reserved.</span>
-  <span style="display:table-cell;text-align:right">2026-08-03T21:16:58Z</span>
+  <span style="display:table-cell;text-align:right">2026-08-06T05:30:02Z</span>
 </div>
 
     </div>

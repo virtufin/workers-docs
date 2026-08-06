@@ -1369,7 +1369,7 @@
 <li><code>--native-csproj PATH</code> — override the auto-discovered AOT csproj.</li>
 <li><code>--out DIR</code> — output dir for the per-RID AOT publish (default: <code>/tmp/worker-aot-out</code>).</li>
 <li><code>--config PATH</code>, <code>--library-version V</code> — same as the managed build.</li>
-<li><code>--docker-image IMG</code> — default <code>docker.haenerconsulting.com/library/dotnet-crossbuild:10.0</code>. Set to <code>''</code> to skip Docker (host must have clang + cross-binutils).</li>
+<li><code>--docker-image IMG</code> — default <code>docker.haenerconsulting.com/library/dotnet-crossbuild:10</code>. Set to <code>''</code> to skip Docker (host must have clang + cross-binutils).</li>
 </ul>
 <p>Flow per RID:
 1. <code>docker run --rm --platform linux/{amd64,arm64} -v &lt;src&gt;:/src -v &lt;nuget-cache&gt;:/root/.nuget/packages -e VIRTUFIN_PACKAGES_USER -e VIRTUFIN_PACKAGES_TOKEN &lt;image&gt; bash -c "dotnet publish &lt;csproj&gt; -c Release -r &lt;RID&gt; -p:PublishAot=true -p:StripSymbols=false -o /&lt;out&gt;/&lt;RID&gt;"</code>
@@ -1444,7 +1444,7 @@
     <div class="md-copyright__highlight">
       <div style="display:table;width:100%">
   <span style="display:table-cell">&copy; 2026 Häner Consulting. All Rights Reserved.</span>
-  <span style="display:table-cell;text-align:right">2026-08-03T21:16:58Z</span>
+  <span style="display:table-cell;text-align:right">2026-08-06T05:30:02Z</span>
 </div>
 
     </div>
