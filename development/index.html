@@ -1329,7 +1329,7 @@ already confirms.</p>
 <li><strong><code>scripts/build_managed.py</code> and <code>scripts/build_aot.py</code> are thin pass-through wrappers</strong> — the real logic is in <code>@common/scripts/build_*.py</code>. The wrapper just sets paths.</li>
 <li><strong>Both csproj files</strong> (<code>Managed/</code> and <code>Native/</code>) share the same <code>&lt;AssemblyName&gt;</code> so the nupkg's single <code>&lt;virtufinLibrary&gt;</code> value resolves to either the <code>.dll</code> or the <code>.so</code> depending on which engine loads it.</li>
 <li><strong>The AOT csproj's <code>&lt;Compile Include="..\...Managed\Logic.cs" Link="Logic.cs" /&gt;</code></strong> links the shared handler logic from the managed project dir. Path is relative to the AOT csproj's location, so no absolute paths.</li>
-<li><strong>NuGet auth</strong> is via <code>VIRTUFIN_PACKAGES_USER</code> / <code>VIRTUFIN_PACKAGES_TOKEN</code> env vars; the worker scripts don't read <code>~/.docker/config.json</code> for NuGet creds (only for Docker). The credentials are provided by the CI runner or the dev shell.</li>
+<li><strong>NuGet auth</strong> is via <code>VIRTUFIN_REGISTRY_USER</code> / <code>VIRTUFIN_REGISTRY_TOKEN</code> env vars; the worker scripts don't read <code>~/.docker/config.json</code> for NuGet creds (only for Docker). The credentials are provided by the CI runner or the dev shell.</li>
 </ul>
 <h2 id="see-also">See also</h2>
 <ul>
@@ -1367,7 +1367,7 @@ already confirms.</p>
     <div class="md-copyright__highlight">
       <div style="display:table;width:100%">
   <span style="display:table-cell">&copy; 2026 Häner Consulting. All Rights Reserved.</span>
-  <span style="display:table-cell;text-align:right">2026-08-06T05:30:02Z</span>
+  <span style="display:table-cell;text-align:right">2026-08-07T15:30:55Z</span>
 </div>
 
     </div>

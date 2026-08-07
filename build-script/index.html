@@ -1372,7 +1372,7 @@
 <li><code>--docker-image IMG</code> — default <code>docker.haenerconsulting.com/library/dotnet-crossbuild:10</code>. Set to <code>''</code> to skip Docker (host must have clang + cross-binutils).</li>
 </ul>
 <p>Flow per RID:
-1. <code>docker run --rm --platform linux/{amd64,arm64} -v &lt;src&gt;:/src -v &lt;nuget-cache&gt;:/root/.nuget/packages -e VIRTUFIN_PACKAGES_USER -e VIRTUFIN_PACKAGES_TOKEN &lt;image&gt; bash -c "dotnet publish &lt;csproj&gt; -c Release -r &lt;RID&gt; -p:PublishAot=true -p:StripSymbols=false -o /&lt;out&gt;/&lt;RID&gt;"</code>
+1. <code>docker run --rm --platform linux/{amd64,arm64} -v &lt;src&gt;:/src -v &lt;nuget-cache&gt;:/root/.nuget/packages -e VIRTUFIN_REGISTRY_USER -e VIRTUFIN_REGISTRY_TOKEN &lt;image&gt; bash -c "dotnet publish &lt;csproj&gt; -c Release -r &lt;RID&gt; -p:PublishAot=true -p:StripSymbols=false -o /&lt;out&gt;/&lt;RID&gt;"</code>
 2. The AOT compiler emits <code>&lt;AssemblyName&gt;.so</code> (or <code>&lt;AssemblyNameNative&gt;.so</code> if the <code>&lt;AssemblyName&gt;</code> differs; the script renames the file to <code>lib&lt;AssemblyName&gt;.so</code> per NuGet convention).
 3. <code>stage_native_libs</code> copies each <code>.so</code> into a single <code>runtimes/&lt;rid&gt;/native/lib*.so</code> layout.
 4. <code>write_supported_rids</code> writes the <code>.supported-rids</code> sidecar at the nupkg root (one RID per line, in build order).
@@ -1444,7 +1444,7 @@
     <div class="md-copyright__highlight">
       <div style="display:table;width:100%">
   <span style="display:table-cell">&copy; 2026 Häner Consulting. All Rights Reserved.</span>
-  <span style="display:table-cell;text-align:right">2026-08-06T05:30:02Z</span>
+  <span style="display:table-cell;text-align:right">2026-08-07T15:30:55Z</span>
 </div>
 
     </div>
