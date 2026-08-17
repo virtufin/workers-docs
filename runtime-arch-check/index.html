@@ -1325,30 +1325,30 @@ linux-x64
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_current_rid</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">machine</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">machine</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="n">system</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">arch</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x86_64&quot;</span><span class="p">:</span> <span class="s2">&quot;x64&quot;</span><span class="p">,</span> <span class="s2">&quot;amd64&quot;</span><span class="p">:</span> <span class="s2">&quot;x64&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;aarch64&quot;</span><span class="p">:</span> <span class="s2">&quot;arm64&quot;</span><span class="p">,</span> <span class="s2">&quot;arm64&quot;</span><span class="p">:</span> <span class="s2">&quot;arm64&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="n">machine</span><span class="p">)</span>
-    <span class="n">os_</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;linux&quot;</span><span class="p">:</span> <span class="s2">&quot;linux&quot;</span><span class="p">,</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span> <span class="s2">&quot;osx&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;windows&quot;</span><span class="p">:</span> <span class="s2">&quot;win&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">system</span><span class="p">)</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os_</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">arch</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">arch</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"x86_64"</span><span class="p">:</span> <span class="s2">"x64"</span><span class="p">,</span> <span class="s2">"amd64"</span><span class="p">:</span> <span class="s2">"x64"</span><span class="p">,</span>
+            <span class="s2">"aarch64"</span><span class="p">:</span> <span class="s2">"arm64"</span><span class="p">,</span> <span class="s2">"arm64"</span><span class="p">:</span> <span class="s2">"arm64"</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="n">machine</span><span class="p">)</span>
+    <span class="n">os_</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"linux"</span><span class="p">:</span> <span class="s2">"linux"</span><span class="p">,</span> <span class="s2">"darwin"</span><span class="p">:</span> <span class="s2">"osx"</span><span class="p">,</span>
+           <span class="s2">"windows"</span><span class="p">:</span> <span class="s2">"win"</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">system</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os_</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">arch</span><span class="si">}</span><span class="s2">"</span>
 
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_assert_runtime_supported</span><span class="p">(</span><span class="n">worker_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch the nupkg header and verify the local RID is in</span>
+<span class="w">    </span><span class="sd">"""Fetch the nupkg header and verify the local RID is in</span>
 <span class="sd">    .supported-rids. Skip if the sidecar is missing (back-compat with</span>
-<span class="sd">    pre-0.0.8 nupkgs).&quot;&quot;&quot;</span>
+<span class="sd">    pre-0.0.8 nupkgs)."""</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">nupkg_bytes</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_in_executor</span><span class="p">(</span><span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">,</span> <span class="n">worker_url</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="k">return</span>  <span class="c1"># network error — let the WM fail at load time</span>
     <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">nupkg_bytes</span><span class="p">))</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s2">&quot;.supported-rids&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">zf</span><span class="o">.</span><span class="n">namelist</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s2">".supported-rids"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">zf</span><span class="o">.</span><span class="n">namelist</span><span class="p">():</span>
             <span class="k">return</span>
-        <span class="n">supported</span> <span class="o">=</span> <span class="n">zf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;.supported-rids&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="n">supported</span> <span class="o">=</span> <span class="n">zf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">".supported-rids"</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
     <span class="n">current</span> <span class="o">=</span> <span class="n">_current_rid</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">current</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">UnsupportedWorkerRuntimeError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Worker nupkg supports </span><span class="si">{</span><span class="n">supported</span><span class="si">}</span><span class="s2">, but you are on </span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="s2">. &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;Rebuild with --rids </span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="s2"> or run on a supported host.&quot;</span><span class="p">)</span>
+            <span class="sa">f</span><span class="s2">"Worker nupkg supports </span><span class="si">{</span><span class="n">supported</span><span class="si">}</span><span class="s2">, but you are on </span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="s2">. "</span>
+            <span class="sa">f</span><span class="s2">"Rebuild with --rids </span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="s2"> or run on a supported host."</span><span class="p">)</span>
 </code></pre></div>
 <p>The <code>UnsupportedWorkerRuntimeError</code> is a clear, actionable error. The user sees "supports [linux-arm64, linux-x64], but you are on osx-arm64" and knows what to do.</p>
 <h2 id="what-happens-on-each-platform">What happens on each platform</h2>
@@ -1444,7 +1444,7 @@ linux-x64
     <div class="md-copyright__highlight">
       <div style="display:table;width:100%">
   <span style="display:table-cell">&copy; 2026 Häner Consulting. All Rights Reserved.</span>
-  <span style="display:table-cell;text-align:right">2026-08-11T04:15:20Z</span>
+  <span style="display:table-cell;text-align:right">2026-08-17T13:31:00Z</span>
 </div>
 
     </div>

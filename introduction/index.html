@@ -1278,9 +1278,9 @@
 <h2 id="the-igatewayclient-abstraction">The IGatewayClient abstraction</h2>
 <p>The worker's handler logic does not care which engine loaded it. Handler code calls backend services through <code>IGatewayClient</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">gateway</span><span class="p">.</span><span class="n">InvokeAsync</span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;websocketmanager&quot;</span><span class="p">,</span><span class="w">                      </span><span class="c1">// service</span>
-<span class="w">    </span><span class="s">&quot;Connect&quot;</span><span class="p">,</span><span class="w">                                </span><span class="c1">// method</span>
-<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="n">JsonObject</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;url&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">});</span><span class="w">   </span><span class="c1">// request</span>
+<span class="w">    </span><span class="s">"websocketmanager"</span><span class="p">,</span><span class="w">                      </span><span class="c1">// service</span>
+<span class="w">    </span><span class="s">"Connect"</span><span class="p">,</span><span class="w">                                </span><span class="c1">// method</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="n">JsonObject</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="s">"url"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">});</span><span class="w">   </span><span class="c1">// request</span>
 </code></pre></div>
 <p>Two adapters implement <code>IGatewayClient</code>:</p>
 <ul>
@@ -1342,7 +1342,7 @@
     <div class="md-copyright__highlight">
       <div style="display:table;width:100%">
   <span style="display:table-cell">&copy; 2026 Häner Consulting. All Rights Reserved.</span>
-  <span style="display:table-cell;text-align:right">2026-08-11T04:15:20Z</span>
+  <span style="display:table-cell;text-align:right">2026-08-17T13:31:00Z</span>
 </div>
 
     </div>

@@ -1483,13 +1483,13 @@
 - The build script's rename step (<code>mv &lt;AssemblyName&gt;.so lib&lt;AssemblyName&gt;.so</code>) ran. If the AOT output is named differently (e.g. <code>&lt;AssemblyName&gt;Native.so</code>), the rename no-ops and the nupkg has the wrong filename.</p>
 <h2 id="aot-smoke-test-fails-404-not-exported-got">"AOT smoke test fails: 404 NOT exported (got: [...])"</h2>
 <p>The <code>.so</code> was produced but the <code>[UnmanagedCallersOnly]</code> exports aren't there. Check the AOT shim's <code>Process</code> and <code>FreeResult</code> methods have the correct attributes:</p>
-<div class="highlight"><pre><span></span><code><span class="na">[UnmanagedCallersOnly(EntryPoint = &quot;Process&quot;)]</span>
+<div class="highlight"><pre><span></span><code><span class="na">[UnmanagedCallersOnly(EntryPoint = "Process")]</span>
 <span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">unsafe</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">Process</span><span class="p">(</span>
 <span class="w">    </span><span class="n">IntPtr</span><span class="w"> </span><span class="n">host</span><span class="p">,</span><span class="w"> </span><span class="n">IntPtr</span><span class="w"> </span><span class="n">inBuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">inLen</span><span class="p">,</span><span class="w"> </span><span class="n">IntPtr</span><span class="w"> </span><span class="n">outBuf</span><span class="p">,</span><span class="w"> </span><span class="n">IntPtr</span><span class="w"> </span><span class="n">outLen</span><span class="p">)</span>
 <span class="w">    </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">AotNative</span><span class="o">&lt;</span><span class="n">MyWorkerNative</span><span class="o">&gt;</span><span class="p">.</span><span class="n">ProcessStatic</span><span class="p">(</span>
 <span class="w">        </span><span class="n">host</span><span class="p">,</span><span class="w"> </span><span class="n">inBuf</span><span class="p">,</span><span class="w"> </span><span class="n">inLen</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">IntPtr</span><span class="o">*</span><span class="p">)</span><span class="n">outBuf</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">outLen</span><span class="p">);</span>
 
-<span class="na">[UnmanagedCallersOnly(EntryPoint = &quot;FreeResult&quot;)]</span>
+<span class="na">[UnmanagedCallersOnly(EntryPoint = "FreeResult")]</span>
 <span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">FreeResult</span><span class="p">(</span><span class="n">IntPtr</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
 <span class="w">    </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">AotNative</span><span class="o">&lt;</span><span class="n">MyWorkerNative</span><span class="o">&gt;</span><span class="p">.</span><span class="n">FreeResultStatic</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
 </code></pre></div>
@@ -1543,7 +1543,7 @@
     <div class="md-copyright__highlight">
       <div style="display:table;width:100%">
   <span style="display:table-cell">&copy; 2026 Häner Consulting. All Rights Reserved.</span>
-  <span style="display:table-cell;text-align:right">2026-08-11T04:15:20Z</span>
+  <span style="display:table-cell;text-align:right">2026-08-17T13:31:00Z</span>
 </div>
 
     </div>
