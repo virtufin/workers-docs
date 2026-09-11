@@ -1,0 +1,38 @@
+/* Shared docs styling -- generic Material-theme overrides, no
+   repo-specific content. Single source of truth here; a repo's own
+   mkdocs.yml only needs a one-line extra_css reference, never a copy of
+   this file's content. */
+
+/* Source bar — repo link and commit badge highlight independently */
+.md-source-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.md-source-repo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.7;
+  transition: opacity 125ms;
+}
+.md-source-repo-link:hover {
+  opacity: 1;
+}
+.md-source-commit-badge {
+  display: inline-flex;
+  opacity: 0.7;
+  transition: opacity 125ms;
+}
+.md-source-commit-badge:hover {
+  opacity: 1;
+}
+.md-source-commit-badge:hover svg rect {
+  fill: #dee2e6;
+}
+
+/* Footer copyright — expand to full width so build date sits flush right */
+.md-copyright {
+  flex: 1;
+}
