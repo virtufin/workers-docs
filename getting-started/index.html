@@ -1345,7 +1345,7 @@
 </ul>
 <h2 id="1-build-the-worker-managed">1. Build the worker (managed)</h2>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://git.haenerconsulting.com/virtufin/workers.git
-<span class="nb">cd</span><span class="w"> </span>virtufin-workers/WebSocketManagerController
+<span class="nb">cd</span><span class="w"> </span>workers/WebSocketManagerController
 python3<span class="w"> </span>scripts/build_managed.py
 </code></pre></div>
 <p>This runs <code>dotnet publish</code> on the managed csproj, then <code>PackageWorker</code> (an MSBuild target in the csproj) stages the output into <code>&lt;repo&gt;/build/Virtufin.Worker.WebSocketManagerController.Managed.nupkg/</code>, computes SHA-256, and writes <code>build_version.txt</code>. Output:</p>
@@ -1431,7 +1431,7 @@ uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </s
     <div class="md-copyright__highlight">
       <div style="display:table;width:100%">
   <span style="display:table-cell">&copy; 2026 Häner Consulting. All Rights Reserved.</span>
-  <span style="display:table-cell;text-align:right">2026-09-11T12:52:53Z</span>
+  <span style="display:table-cell;text-align:right">2026-09-12T09:06:06Z</span>
 </div>
 
     </div>
